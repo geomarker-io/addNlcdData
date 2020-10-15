@@ -3,7 +3,9 @@
 
 # addNlcdData
 
-<!-- badges: start --> [![R build
+<!-- badges: start -->
+
+[![R build
 status](https://github.com/geomarker-io/addNlcdData/workflows/R-CMD-check/badge.svg)](https://github.com/geomarker-io/addNlcdData/actions)
 <!-- badges: end -->
 
