@@ -1,0 +1,57 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# addNlcdData
+
+  <!-- badges: start -->
+  [![R build status](https://github.com/geomarker-io/addNlcdData/workflows/R-CMD-check/badge.svg)](https://github.com/geomarker-io/addNlcdData/actions)
+  <!-- badges: end -->
+
+The goal of addNlcdData is to add NLCD weather varaibles to your data based on nlcd_cell (an identifier for a 30 x 30 m NLCD grid cell) and year (2001, 2006, 2011, or 2016).
+
+## Installation
+
+Install the development version from GitHub with:
+
+```
+# install.packages("remotes")
+remotes::install_github("geomarker-io/addNlcdData")
+```
+
+### NLCD grid chunk files
+
+The NLCD product values are stored in fst files as "chunks" of the total data and are names like `nlcd_chunk_{chunk_number}.fst`. Chunk files will be automatically downloaded to the `./nlcd_fst/` folder in the working directory; the number of chunk files needed depends on the geographic extent of the input spatial data; their sizes vary, but each file is 28.5 MB in size on average (all 1,685 files take about 48 GB on disk). 
+
+## Example
+
+```{r example}
+library(addNlcdData)
+library(magrittr)
+
+d <- tibble::tribble(
+  ~id, ~lon, ~lat,
+  51981, -84.69127387, 39.24710734,
+  77553, -84.47798287, 39.12005904,
+  52284, -84.47123583,  39.2631309,
+  96308, -84.41741798, 39.18541228,
+  78054, -84.41395064, 39.18322447
+)
+
+d <- get_nlcd_cell_numbers_points(d)
+
+get_nlcd_data(d, product = c("nlcd", "impervious", "imperviousdescriptor"), year = 2016)
+```
+
+
