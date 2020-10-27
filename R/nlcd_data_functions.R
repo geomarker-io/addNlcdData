@@ -66,7 +66,6 @@ read_nlcd_fst_join <- function(d,
   out
 }
 
-
 #' get NLCD data for NLCD cells
 #'
 #' @param d data.frame with column 'nlcd_cell'
@@ -93,7 +92,10 @@ get_nlcd_data <- function(d,
     stop("input dataframe must have a column called 'nlcd_cell'")
   }
 
-  message(nrow(d %>% dplyr::filter(is.na(nlcd_cell))), ' rows were missing nlcd_cell and will be removed')
+  if (nrow(d %>% dplyr::filter(is.na(nlcd_cell))) > 0) {
+    message(nrow(d %>% dplyr::filter(is.na(nlcd_cell))), ' rows were missing nlcd_cell and will be removed')
+  }
+
   d <- d %>% dplyr::filter(!is.na(nlcd_cell))
 
   d <- split(d, d$nlcd_cell)
