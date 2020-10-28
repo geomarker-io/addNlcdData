@@ -68,7 +68,7 @@ read_nlcd_fst_join <- function(d,
 
 #' get NLCD data for NLCD cells
 #'
-#' @param d data.frame with column 'nlcd_cell'
+#' @param raw_data data.frame with column 'nlcd_cell'
 #' @param product a character string of desired nlcd variables; a subset of c("nlcd", "impervious", "imperviousdescriptor")
 #' @param year a numeric vector of desired nlcd years; a subset of c(2001, 2006, 2011, 2016)
 #'

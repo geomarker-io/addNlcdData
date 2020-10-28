@@ -39,14 +39,6 @@ get_nlcd_percentages <- function(query_poly) {
 #' @return a data.frame identical to the input data.frame but with appended percentage NLCD values (and in long format)
 #'         all available products and years will be returned.
 #'
-#' @examples
-#' if (FALSE) {
-#' tracts <- tigris::tracts(state = 'oh', county = 'hamilton') %>%
-#'           slice(1:3) %>%
-#'           select(GEOID)
-#'
-#' get_nlcd_data_polygons(tracts)
-#' }
 #' @export
 get_nlcd_data_polygons <- function(polygon_data) {
   if (! 'sf' %in% class(polygon_data)) {
