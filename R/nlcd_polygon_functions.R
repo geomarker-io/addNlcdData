@@ -1,8 +1,6 @@
-get_nlcd_percentages <- function(row) {
+get_nlcd_percentages <- function(query_poly) {
 
-  query_poly <- d[row, ]
-
-  nlcd_cells <- raster::cellFromPolygon(r_nlcd_empty(), as(query_poly, "Spatial"))[[1]]
+  nlcd_cells <- raster::cellFromPolygon(r_nlcd_empty(), sf::as_Spatial(query_poly))[[1]]
 
   query_poly <- tibble::tibble(.row = seq_len(length(nlcd_cells)), nlcd_cell = nlcd_cells)
 
@@ -14,7 +12,6 @@ get_nlcd_percentages <- function(row) {
   }
 
   nlcd_data %>%
-    dplyr::select(-.row) %>%
     dplyr::group_by(year) %>%
     dplyr::summarize(
       impervious = round(mean(impervious), 0),
@@ -39,7 +36,7 @@ get_nlcd_percentages <- function(row) {
 #'
 #' @param polygon_data an sf data.frame containing polygons for which data from nlcd cells will be averaged
 #'
-#' @return a data.frame identical to the input data.frame but with appended average NLCD values (and in long format)
+#' @return a data.frame identical to the input data.frame but with appended percentage NLCD values (and in long format)
 #'         all available products and years will be returned.
 #'
 #' @examples
@@ -64,8 +61,9 @@ get_nlcd_data_polygons <- function(polygon_data) {
     stats::na.omit() %>%
     sf::st_transform(crs = raster::crs(r_nlcd_empty())) # reproject points into NLCD projection for overlay
 
-  d_out <- purrr::map(1:nrow(d), get_nlcd_percentages)
-  d_out <- purrr::map2(d_out, 1:length(d), ~dplyr::mutate(.x, .row = .y))
+  d_out <- purrr::map(1:nrow(d), ~get_nlcd_percentages(d[.x,]))
+
+  d_out <- purrr::map2(d_out, 1:length(d_out), ~dplyr::mutate(.x, .row = .y))
 
   d_out <-
     dplyr::bind_rows(d_out) %>%
@@ -80,7 +78,7 @@ get_nlcd_data_polygons <- function(polygon_data) {
 #' @param point_data data.frame with columns 'lat' and 'lon'
 #' @param buffer_m desired buffer radius in meters
 #'
-#' @return a data.frame identical to the input data.frame but with appended average NLCD values (and in long format)
+#' @return a data.frame identical to the input data.frame but with appended percentage NLCD values (and in long format)
 #'         all available products and years will be returned.
 #'
 #' @examples

@@ -32,11 +32,12 @@ disk).
 
 ## Example
 
+Point Data
+
 ``` r
 library(addNlcdData)
-library(magrittr)
 
-d <- tibble::tribble(
+point_data <- tibble::tribble(
   ~id, ~lon, ~lat,
   51981, -84.69127387, 39.24710734,
   77553, -84.47798287, 39.12005904,
@@ -45,19 +46,72 @@ d <- tibble::tribble(
   78054, -84.41395064, 39.18322447
 )
 
-d <- get_nlcd_cell_numbers_points(d)
+point_data <- get_nlcd_cell_numbers_points(point_data)
 #> Warning: replacing previous import 'vctrs::data_frame' by
 #> 'tibble::data_frame' when loading 'dplyr'
 
-get_nlcd_data(d, product = c("nlcd", "impervious", "imperviousdescriptor"), year = 2016)
-#> 0 rows were missing nlcd_cell and will be removed
-#> # A tibble: 5 x 9
-#>      id   lon   lat year  impervious landcover_class landcover green
-#>   <dbl> <dbl> <dbl> <chr>      <dbl> <chr>           <chr>     <lgl>
-#> 1 52284 -84.5  39.3 2016          22 developed       develope… TRUE 
-#> 2 51981 -84.7  39.2 2016           0 forest          deciduou… TRUE 
-#> 3 96308 -84.4  39.2 2016          10 developed       develope… TRUE 
-#> 4 78054 -84.4  39.2 2016          40 developed       develope… TRUE 
-#> 5 77553 -84.5  39.1 2016          51 developed       develope… FALSE
-#> # … with 1 more variable: road_type <chr>
+get_nlcd_data(point_data, product = c("nlcd", "impervious", "imperviousdescriptor"), year = 2016)
+#> # A tibble: 5 x 10
+#>      id   lon   lat nlcd_cell year  impervious landcover_class landcover
+#>   <dbl> <dbl> <dbl>     <dbl> <chr>      <dbl> <chr>           <chr>    
+#> 1 51981 -84.7  39.2    7.79e9 2016           0 forest          deciduou…
+#> 2 77553 -84.5  39.1    7.85e9 2016          51 developed       develope…
+#> 3 52284 -84.5  39.3    7.77e9 2016          22 developed       develope…
+#> 4 96308 -84.4  39.2    7.81e9 2016          10 developed       develope…
+#> 5 78054 -84.4  39.2    7.81e9 2016          40 developed       develope…
+#> # … with 2 more variables: green <lgl>, road_type <chr>
+```
+
+Polygon Data
+
+``` r
+library(sf)
+#> Linking to GEOS 3.7.2, GDAL 2.4.2, PROJ 5.2.0
+library(tigris)
+#> To enable 
+#> caching of data, set `options(tigris_use_cache = TRUE)` in your R script or .Rprofile.
+#> 
+#> Attaching package: 'tigris'
+#> The following object is masked from 'package:graphics':
+#> 
+#>     plot
+options(tigris_class = 'sf')
+
+polygon_data <- tigris::tracts(state = 'oh', county = 'hamilton') %>% 
+  dplyr::slice(1:3) %>% 
+  dplyr::select(GEOID)
+
+get_nlcd_data_polygons(polygon_data)
+#> Simple feature collection with 12 features and 17 fields
+#> geometry type:  MULTIPOLYGON
+#> dimension:      XY
+#> bbox:           xmin: -84.44668 ymin: 39.14784 xmax: -84.37301 ymax: 39.1935
+#> epsg (SRID):    4269
+#> proj4string:    +proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs
+#> First 10 features:
+#>         GEOID year impervious green primary_urban primary_rural
+#> 1 39061005500 2001         35    69             1             0
+#> 2 39061005500 2006         37    66             1             0
+#> 3 39061005500 2011         37    66             1             0
+#> 4 39061005500 2016         38    65             1             0
+#> 5 39061005600 2001         29    84             0             0
+#>   secondary_urban secondary_rural tertiary_urban tertiary_rural
+#> 1              10               0             17              0
+#> 2              10               0             19              0
+#> 3              10               0             19              0
+#> 4              11               0             19              0
+#> 5               8               0             33              0
+#>   thinned_urban thinned_rural nonroad_urban nonroad_rural energyprod_urban
+#> 1             0             0            60             0                0
+#> 2             0             0            62             0                0
+#> 3             0             0            62             0                0
+#> 4             0             0            62             0                0
+#> 5             0             0            54             0                0
+#>   energyprod_rural nonimpervious                       geometry
+#> 1                0            11 MULTIPOLYGON (((-84.42279 3...
+#> 2                0             8 MULTIPOLYGON (((-84.42279 3...
+#> 3                0             8 MULTIPOLYGON (((-84.42279 3...
+#> 4                0             8 MULTIPOLYGON (((-84.42279 3...
+#> 5                0             5 MULTIPOLYGON (((-84.40451 3...
+#>  [ reached 'max' / getOption("max.print") -- omitted 5 rows ]
 ```

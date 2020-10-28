@@ -84,34 +84,42 @@ read_nlcd_fst_join <- function(d,
 #' get_nlcd_data(d, product = c("nlcd", "impervious"), year = c(2011, 2016))
 #' }
 #' @export
-get_nlcd_data <- function(d,
+get_nlcd_data <- function(raw_data,
                           product = c("nlcd", "impervious", "imperviousdescriptor"),
                           year = c(2001, 2006, 2011, 2016)) {
 
-  if (!"nlcd_cell" %in% colnames(d)) {
+  if (!"nlcd_cell" %in% colnames(raw_data)) {
     stop("input dataframe must have a column called 'nlcd_cell'")
   }
 
-  if (nrow(d %>% dplyr::filter(is.na(nlcd_cell))) > 0) {
-    message(nrow(d %>% dplyr::filter(is.na(nlcd_cell))), ' rows were missing nlcd_cell and will be removed')
+  if (nrow(raw_data %>% dplyr::filter(is.na(nlcd_cell))) > 0) {
+    message(nrow(raw_data %>% dplyr::filter(is.na(nlcd_cell))), ' rows were missing nlcd_cell and will be removed')
   }
 
-  d <- d %>% dplyr::filter(!is.na(nlcd_cell))
+  raw_data$.row <- seq_len(nrow(raw_data))
 
-  d <- split(d, d$nlcd_cell)
+  d <-
+    raw_data %>%
+    dplyr::filter(!is.na(nlcd_cell)) %>%
+    dplyr::select(.row, nlcd_cell) %>%
+    tidyr::nest(.rows = c(.row))
 
-  out <- purrr::map_dfr(d, ~ read_nlcd_fst_join(.x, product, year))
+  out <- purrr::map_dfr(1:nrow(d), ~ read_nlcd_fst_join(d[.x,], product, year))
 
   out <-
     out %>%
     dplyr::select(-nlcd_cell) %>%
-    tidyr::pivot_longer(cols = tidyselect::starts_with(product),
+    tidyr::pivot_longer(cols = 2:ncol(.),
                         names_to = c("product", "year"), names_sep = "_") %>%
     tidyr::pivot_wider(names_from = product, values_from = value) %>%
     dplyr::left_join(nlcd_legend, by = c("nlcd" = "value")) %>%
     dplyr::select(-nlcd) %>%
     dplyr::left_join(imperviousness_legend, by = c("imperviousdescriptor" = "value")) %>%
-    dplyr::select(-imperviousdescriptor)
+    dplyr::select(-imperviousdescriptor) %>%
+    tidyr::unnest(cols = c(.rows))
+
+  out <- dplyr::left_join(raw_data, out, by = '.row') %>%
+    dplyr::select(-.row)
 
   return(out)
 }

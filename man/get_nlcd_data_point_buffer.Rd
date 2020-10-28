@@ -12,7 +12,7 @@ get_nlcd_data_point_buffer(point_data, buffer_m)
 \item{buffer_m}{desired buffer radius in meters}
 }
 \value{
-a data.frame identical to the input data.frame but with appended average NLCD values (and in long format)
+a data.frame identical to the input data.frame but with appended percentage NLCD values (and in long format)
 all available products and years will be returned.
 }
 \description{

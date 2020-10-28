@@ -10,7 +10,7 @@ get_nlcd_data_polygons(polygon_data)
 \item{polygon_data}{an sf data.frame containing polygons for which data from nlcd cells will be averaged}
 }
 \value{
-a data.frame identical to the input data.frame but with appended average NLCD values (and in long format)
+a data.frame identical to the input data.frame but with appended percentage NLCD values (and in long format)
 all available products and years will be returned.
 }
 \description{

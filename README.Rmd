@@ -36,11 +36,12 @@ The NLCD product values are stored in fst files as "chunks" of the total data an
 
 ## Example
 
+Point Data
+
 ```{r example}
 library(addNlcdData)
-library(magrittr)
 
-d <- tibble::tribble(
+point_data <- tibble::tribble(
   ~id, ~lon, ~lat,
   51981, -84.69127387, 39.24710734,
   77553, -84.47798287, 39.12005904,
@@ -49,9 +50,22 @@ d <- tibble::tribble(
   78054, -84.41395064, 39.18322447
 )
 
-d <- get_nlcd_cell_numbers_points(d)
+point_data <- get_nlcd_cell_numbers_points(point_data)
 
-get_nlcd_data(d, product = c("nlcd", "impervious", "imperviousdescriptor"), year = 2016)
+get_nlcd_data(point_data, product = c("nlcd", "impervious", "imperviousdescriptor"), year = 2016)
 ```
 
+Polygon Data
+
+```{r}
+library(sf)
+library(tigris)
+options(tigris_class = 'sf')
+
+polygon_data <- tigris::tracts(state = 'oh', county = 'hamilton') %>% 
+  dplyr::slice(1:3) %>% 
+  dplyr::select(GEOID)
+
+get_nlcd_data_polygons(polygon_data)
+```
 
