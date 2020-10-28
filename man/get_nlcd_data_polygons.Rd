@@ -16,12 +16,3 @@ all available products and years will be returned.
 \description{
 get NLCD data for polygons
 }
-\examples{
-if (FALSE) {
-tracts <- tigris::tracts(state = 'oh', county = 'hamilton') \%>\%
-          slice(1:3) \%>\%
-          select(GEOID)
-
-get_nlcd_data_polygons(tracts)
-}
-}
