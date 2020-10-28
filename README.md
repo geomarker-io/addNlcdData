@@ -9,9 +9,10 @@
 status](https://github.com/geomarker-io/addNlcdData/workflows/R-CMD-check/badge.svg)](https://github.com/geomarker-io/addNlcdData/actions)
 <!-- badges: end -->
 
-The goal of addNlcdData is to add NLCD weather varaibles to your data
-based on nlcd\_cell (an identifier for a 30 x 30 m NLCD grid cell) and
-year (2001, 2006, 2011, or 2016).
+The goal of addNlcdData is to add varaibles from the [National Landcover
+Database](https://www.mrlc.gov/) to your data based on nlcd\_cell (an
+identifier for a 30 x 30 m NLCD grid cell) and year (2001, 2006, 2011,
+or 2016).
 
 ## Installation
 
@@ -19,6 +20,46 @@ Install the development version from GitHub with:
 
     # install.packages("remotes")
     remotes::install_github("geomarker-io/addNlcdData")
+
+### NLCD data details
+
+  - Variables returned for point data include:
+    
+      - `impervious`: percent impervious
+      - `landcover_class`: landcover classfication category (broad)
+      - `landcover`: landcover classification (detailed)
+      - `green`: TRUE/FALSE if landcover classification in any category
+        except water, ice/snow, developed medium intensity, developed
+        high intensity, rock/sand/clay
+      - `road_type`: impervious descriptor category (or
+        “non-impervious”)
+
+  - Variables returned for polygon data include:
+    
+      - `impervious`: average percent impervious of all nlcd cells
+        overlapping the polygon
+      - `green`: percent of `green = TRUE` nlcd cells overlapping
+        polygon
+      - `primary_urban`, `primary_rural`, `secondary_urban`,
+        `secondary_rural`, `tertiary_urban`, `tertiary_rural`,
+        `thinned_urban`, `thinned_rural` `nonroad_urban`,
+        `nonroad_rural`, `energyprod_urban`, `energyprod_rural`: percent
+        of nlcd cells overlapping polygon classified as the
+        corresponding impervious descriptor category
+      - `nonimpervious`: percent of ncld cells overlapping polygon not
+        classified as any of the impervious descriptior categories
+
+  - Note that the NLCD categories correspond exactly to fraction
+    imperviousness
+    
+    | nlcd category    | fraction impervious |
+    | ---------------- | ------------------- |
+    | developed open   | \< 20%              |
+    | developed low    | 20 - 49%            |
+    | developed medium | 50 - 79%            |
+    | developed high   | 80 - 100%           |
+    | any other        | 0%                  |
+    
 
 ### NLCD grid chunk files
 
@@ -30,7 +71,7 @@ geographic extent of the input spatial data; their sizes vary, but each
 file is 28.5 MB in size on average (all 1,685 files take about 48 GB on
 disk).
 
-## Example
+## Examples
 
 Point Data
 
@@ -114,4 +155,38 @@ get_nlcd_data_polygons(polygon_data)
 #> 4                0             8 MULTIPOLYGON (((-84.42279 3...
 #> 5                0             5 MULTIPOLYGON (((-84.40451 3...
 #>  [ reached 'max' / getOption("max.print") -- omitted 5 rows ]
+```
+
+Points with buffers
+
+``` r
+get_nlcd_data_point_buffer(point_data, buffer_m = 400)
+#> # A tibble: 20 x 20
+#>       id   lon   lat nlcd_cell year  impervious green primary_urban
+#>    <dbl> <dbl> <dbl>     <dbl> <chr>      <dbl> <dbl>         <dbl>
+#>  1 51981 -84.7  39.2    7.79e9 2001           0   100             0
+#>  2 51981 -84.7  39.2    7.79e9 2006           0   100             0
+#>  3 51981 -84.7  39.2    7.79e9 2011           0   100             0
+#>  4 51981 -84.7  39.2    7.79e9 2016           0   100             0
+#>  5 77553 -84.5  39.1    7.85e9 2001          12    53             0
+#>  6 77553 -84.5  39.1    7.85e9 2006          12    53             0
+#>  7 77553 -84.5  39.1    7.85e9 2011          12    53             0
+#>  8 77553 -84.5  39.1    7.85e9 2016          12    53             0
+#>  9 52284 -84.5  39.3    7.77e9 2001          36    68             0
+#> 10 52284 -84.5  39.3    7.77e9 2006          36    68             0
+#> 11 52284 -84.5  39.3    7.77e9 2011          36    68             0
+#> 12 52284 -84.5  39.3    7.77e9 2016          36    68             0
+#> 13 96308 -84.4  39.2    7.81e9 2001          22    91             0
+#> 14 96308 -84.4  39.2    7.81e9 2006          23    90             0
+#> 15 96308 -84.4  39.2    7.81e9 2011          23    90             0
+#> 16 96308 -84.4  39.2    7.81e9 2016          23    90             0
+#> 17 78054 -84.4  39.2    7.81e9 2001          20    91             0
+#> 18 78054 -84.4  39.2    7.81e9 2006          20    91             0
+#> 19 78054 -84.4  39.2    7.81e9 2011          20    91             0
+#> 20 78054 -84.4  39.2    7.81e9 2016          20    91             0
+#> # … with 12 more variables: primary_rural <dbl>, secondary_urban <dbl>,
+#> #   secondary_rural <dbl>, tertiary_urban <dbl>, tertiary_rural <dbl>,
+#> #   thinned_urban <dbl>, thinned_rural <dbl>, nonroad_urban <dbl>,
+#> #   nonroad_rural <dbl>, energyprod_urban <dbl>, energyprod_rural <dbl>,
+#> #   nonimpervious <dbl>
 ```

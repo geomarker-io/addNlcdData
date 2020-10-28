@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 [![R build status](https://github.com/geomarker-io/addNlcdData/workflows/R-CMD-check/badge.svg)](https://github.com/geomarker-io/addNlcdData/actions)
 <!-- badges: end -->
 
-The goal of addNlcdData is to add NLCD weather varaibles to your data based on nlcd_cell (an identifier for a 30 x 30 m NLCD grid cell) and year (2001, 2006, 2011, or 2016).
+The goal of addNlcdData is to add varaibles from the [National Landcover Database](https://www.mrlc.gov/) to your data based on nlcd_cell (an identifier for a 30 x 30 m NLCD grid cell) and year (2001, 2006, 2011, or 2016).
 
 ## Installation
 
@@ -30,11 +30,37 @@ Install the development version from GitHub with:
 remotes::install_github("geomarker-io/addNlcdData")
 ```
 
+### NLCD data details
+
+
+- Variables returned for point data include:
+    - `impervious`: percent impervious
+    - `landcover_class`: landcover classfication category (broad)
+    - `landcover`: landcover classification (detailed)
+    - `green`: TRUE/FALSE if landcover classification in any category except water, ice/snow, developed medium intensity, developed high intensity, rock/sand/clay
+    - `road_type`: impervious descriptor category (or "non-impervious")
+    
+- Variables returned for polygon data include:
+    - `impervious`: average percent impervious of all nlcd cells overlapping the polygon
+    - `green`: percent of `green = TRUE` nlcd cells overlapping polygon
+    - `primary_urban`, `primary_rural`, `secondary_urban`, `secondary_rural`, `tertiary_urban`, `tertiary_rural`, `thinned_urban`, `thinned_rural` `nonroad_urban`, `nonroad_rural`, `energyprod_urban`, `energyprod_rural`: percent of nlcd cells overlapping polygon classified as the corresponding impervious descriptor category 
+    - `nonimpervious`: percent of ncld cells overlapping polygon not classified as any of the impervious descriptior categories 
+
+- Note that the NLCD categories correspond exactly to fraction imperviousness
+
+    nlcd category | fraction impervious
+    --------------|--------------------
+    developed open | < 20%
+    developed low | 20 - 49%
+    developed medium | 50 - 79%
+    developed high | 80 - 100%
+    any other | 0%
+
 ### NLCD grid chunk files
 
 The NLCD product values are stored in fst files as "chunks" of the total data and are names like `nlcd_chunk_{chunk_number}.fst`. Chunk files will be automatically downloaded to the `./nlcd_fst/` folder in the working directory; the number of chunk files needed depends on the geographic extent of the input spatial data; their sizes vary, but each file is 28.5 MB in size on average (all 1,685 files take about 48 GB on disk). 
 
-## Example
+## Examples
 
 Point Data
 
@@ -68,4 +94,11 @@ polygon_data <- tigris::tracts(state = 'oh', county = 'hamilton') %>%
 
 get_nlcd_data_polygons(polygon_data)
 ```
+
+Points with buffers
+
+```{r}
+get_nlcd_data_point_buffer(point_data, buffer_m = 400)
+```
+
 
