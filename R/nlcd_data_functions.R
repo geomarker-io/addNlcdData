@@ -51,7 +51,7 @@ read_nlcd_fst_join <- function(d,
                                year = c(2001, 2006, 2011, 2016)) {
   nlcd_cell_number <- unique(d$nlcd_cell)
   nlcd_chunk <- nlcd_cell_number %/% 1e+07
-  nlcd_row <- nlcd_cell_number %% 1e+07
+  nlcd_row <- nlcd_cell_number %% 1e+07 + 1
   nlcd_file <- glue::glue("./nlcd_fst/nlcd_chunk_{nlcd_chunk}.fst")
   nlcd_columns <- unlist(purrr::map(year, ~ glue::glue("{product}_{.}")))
   if (!file.exists(nlcd_file)) download_nlcd_chunk(nlcd_chunk)
