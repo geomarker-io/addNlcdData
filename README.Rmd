@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# addNlcdData
+# addNlcdData 
 
 <!-- badges: start -->
 [![R build status](https://github.com/geomarker-io/addNlcdData/workflows/R-CMD-check/badge.svg)](https://github.com/geomarker-io/addNlcdData/actions)
@@ -58,7 +58,7 @@ remotes::install_github("geomarker-io/addNlcdData")
 
 ### NLCD grid chunk files
 
-The NLCD product values are stored in fst files as "chunks" of the total data and are names like `nlcd_chunk_{chunk_number}.fst`. Chunk files will be automatically downloaded to the `./nlcd_fst/` folder in the working directory; the number of chunk files needed depends on the geographic extent of the input spatial data; their sizes vary, but each file is 28.5 MB in size on average (all 1,685 files take about 48 GB on disk). 
+The NLCD product values are stored in fst files as "chunks" of the total data and are names like `nlcd_chunk_{chunk_number}.fst`. Chunk files will be automatically downloaded to the `./nlcd_fst/` folder in the working directory; the number of chunk files needed depends on the geographic extent of the input spatial data; their sizes vary, but each file is 28.5 MB in size on average (all 1,685 files take about 48 GB on disk). These files were created using code available at https://github.com/geomarker-io/nlcd_raster_to_fst.
 
 ## Examples
 
