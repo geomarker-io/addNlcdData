@@ -4,3 +4,5 @@
 .Ruserdata
 nlcd_fst/
 .DS_Store
+.progress
+test/
