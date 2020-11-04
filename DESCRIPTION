@@ -1,6 +1,6 @@
 Package: addNlcdData
 Title: Add National Landcover Database Variables to Your Data
-Version: 0.0.1
+Version: 0.0.2
 Authors@R: 
     person(given = "Erika",
            family = "Rasnick",
