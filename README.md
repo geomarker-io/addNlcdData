@@ -69,7 +69,8 @@ will be automatically downloaded to the `./nlcd_fst/` folder in the
 working directory; the number of chunk files needed depends on the
 geographic extent of the input spatial data; their sizes vary, but each
 file is 28.5 MB in size on average (all 1,685 files take about 48 GB on
-disk).
+disk). These files were created using code available at
+<https://github.com/geomarker-io/nlcd_raster_to_fst>.
 
 ## Examples
 
@@ -96,10 +97,10 @@ get_nlcd_data(point_data, product = c("nlcd", "impervious", "imperviousdescripto
 #>      id   lon   lat nlcd_cell year  impervious landcover_class landcover
 #>   <dbl> <dbl> <dbl>     <dbl> <chr>      <dbl> <chr>           <chr>    
 #> 1 51981 -84.7  39.2    7.79e9 2016           0 forest          deciduou…
-#> 2 77553 -84.5  39.1    7.85e9 2016          51 developed       develope…
-#> 3 52284 -84.5  39.3    7.77e9 2016          22 developed       develope…
-#> 4 96308 -84.4  39.2    7.81e9 2016          10 developed       develope…
-#> 5 78054 -84.4  39.2    7.81e9 2016          40 developed       develope…
+#> 2 77553 -84.5  39.1    7.85e9 2016          65 developed       develope…
+#> 3 52284 -84.5  39.3    7.77e9 2016          36 developed       develope…
+#> 4 96308 -84.4  39.2    7.81e9 2016           8 developed       develope…
+#> 5 78054 -84.4  39.2    7.81e9 2016          28 developed       develope…
 #> # … with 2 more variables: green <lgl>, road_type <chr>
 ```
 
@@ -131,22 +132,22 @@ get_nlcd_data_polygons(polygon_data)
 #> proj4string:    +proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs
 #> First 10 features:
 #>         GEOID year impervious green primary_urban primary_rural
-#> 1 39061005500 2001         35    69             1             0
-#> 2 39061005500 2006         37    66             1             0
-#> 3 39061005500 2011         37    66             1             0
-#> 4 39061005500 2016         38    65             1             0
+#> 1 39061005500 2001         35    69             0             0
+#> 2 39061005500 2006         37    67             0             0
+#> 3 39061005500 2011         37    67             0             0
+#> 4 39061005500 2016         38    66             0             0
 #> 5 39061005600 2001         29    84             0             0
 #>   secondary_urban secondary_rural tertiary_urban tertiary_rural
-#> 1              10               0             17              0
-#> 2              10               0             19              0
-#> 3              10               0             19              0
+#> 1              11               0             18              0
+#> 2              11               0             19              0
+#> 3              11               0             19              0
 #> 4              11               0             19              0
-#> 5               8               0             33              0
+#> 5               7               0             34              0
 #>   thinned_urban thinned_rural nonroad_urban nonroad_rural energyprod_urban
-#> 1             0             0            60             0                0
-#> 2             0             0            62             0                0
-#> 3             0             0            62             0                0
-#> 4             0             0            62             0                0
+#> 1             0             0            59             0                0
+#> 2             0             0            61             0                0
+#> 3             0             0            61             0                0
+#> 4             0             0            61             0                0
 #> 5             0             0            54             0                0
 #>   energyprod_rural nonimpervious                       geometry
 #> 1                0            11 MULTIPOLYGON (((-84.42279 3...
@@ -168,22 +169,22 @@ get_nlcd_data_point_buffer(point_data, buffer_m = 400)
 #>  2 51981 -84.7  39.2    7.79e9 2006           0   100             0
 #>  3 51981 -84.7  39.2    7.79e9 2011           0   100             0
 #>  4 51981 -84.7  39.2    7.79e9 2016           0   100             0
-#>  5 77553 -84.5  39.1    7.85e9 2001          12    53             0
-#>  6 77553 -84.5  39.1    7.85e9 2006          12    53             0
-#>  7 77553 -84.5  39.1    7.85e9 2011          12    53             0
-#>  8 77553 -84.5  39.1    7.85e9 2016          12    53             0
-#>  9 52284 -84.5  39.3    7.77e9 2001          36    68             0
-#> 10 52284 -84.5  39.3    7.77e9 2006          36    68             0
-#> 11 52284 -84.5  39.3    7.77e9 2011          36    68             0
-#> 12 52284 -84.5  39.3    7.77e9 2016          36    68             0
-#> 13 96308 -84.4  39.2    7.81e9 2001          22    91             0
-#> 14 96308 -84.4  39.2    7.81e9 2006          23    90             0
-#> 15 96308 -84.4  39.2    7.81e9 2011          23    90             0
-#> 16 96308 -84.4  39.2    7.81e9 2016          23    90             0
-#> 17 78054 -84.4  39.2    7.81e9 2001          20    91             0
-#> 18 78054 -84.4  39.2    7.81e9 2006          20    91             0
-#> 19 78054 -84.4  39.2    7.81e9 2011          20    91             0
-#> 20 78054 -84.4  39.2    7.81e9 2016          20    91             0
+#>  5 77553 -84.5  39.1    7.85e9 2001          12    50             0
+#>  6 77553 -84.5  39.1    7.85e9 2006          12    50             0
+#>  7 77553 -84.5  39.1    7.85e9 2011          12    50             0
+#>  8 77553 -84.5  39.1    7.85e9 2016          12    50             0
+#>  9 52284 -84.5  39.3    7.77e9 2001          38    66             0
+#> 10 52284 -84.5  39.3    7.77e9 2006          38    66             0
+#> 11 52284 -84.5  39.3    7.77e9 2011          38    66             0
+#> 12 52284 -84.5  39.3    7.77e9 2016          38    66             0
+#> 13 96308 -84.4  39.2    7.81e9 2001          23    90             0
+#> 14 96308 -84.4  39.2    7.81e9 2006          24    89             0
+#> 15 96308 -84.4  39.2    7.81e9 2011          24    89             0
+#> 16 96308 -84.4  39.2    7.81e9 2016          24    89             0
+#> 17 78054 -84.4  39.2    7.81e9 2001          21    91             0
+#> 18 78054 -84.4  39.2    7.81e9 2006          21    91             0
+#> 19 78054 -84.4  39.2    7.81e9 2011          21    91             0
+#> 20 78054 -84.4  39.2    7.81e9 2016          21    90             0
 #> # … with 12 more variables: primary_rural <dbl>, secondary_urban <dbl>,
 #> #   secondary_rural <dbl>, tertiary_urban <dbl>, tertiary_rural <dbl>,
 #> #   thinned_urban <dbl>, thinned_rural <dbl>, nonroad_urban <dbl>,
