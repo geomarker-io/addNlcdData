@@ -1,8 +1,10 @@
 get_nlcd_percentages <- function(query_poly) {
 
-  nlcd_cells <- raster::cellFromPolygon(r_nlcd_empty(), sf::as_Spatial(query_poly))[[1]]
+  nlcd_cells <- exactextractr::exact_extract(r_nlcd_empty(), query_poly, include_cell = T)[[1]]
 
-  query_poly <- tibble::tibble(.row = seq_len(length(nlcd_cells)), nlcd_cell = nlcd_cells)
+  query_poly <- tibble::tibble(.row = seq_len(length(nlcd_cells$cell)),
+                               nlcd_cell = nlcd_cells$cell,
+                               coverage_fraction = nlcd_cells$coverage_fraction)
 
   nlcd_data <- get_nlcd_data(query_poly)
 

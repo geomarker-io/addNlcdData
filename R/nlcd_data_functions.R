@@ -34,8 +34,10 @@ get_nlcd_cell_numbers_points <- function(point_data) {
     sf::st_as_sf(coords = c("lon", "lat"), crs = 4326) %>%
     sf::st_transform(crs = raster::crs(r_nlcd_empty())) # reproject points into NLCD projection for overlay
 
+  coords <- as.matrix(sf::st_coordinates(d))
+
   d <- d %>%
-    dplyr::mutate(nlcd_cell = raster::cellFromXY(r_nlcd_empty(), sf::as_Spatial(d)))
+    dplyr::mutate(nlcd_cell = raster::cellFromXY(r_nlcd_empty(), coords))
 
   d_out <- d %>%
     tidyr::unnest(.rows) %>%
