@@ -6,7 +6,7 @@ Authors@R:
            family = "Rasnick",
            role = c("aut", "cre"),
            email = "erika.rasnick@cchmc.org")
-Description: This package allows you to add National Landcover Database (NLCD) Variables to your data by
+Description: Add National Landcover Database (NLCD) Variables to your data by
             downloading only chunks of NLCD data from the internet needed for your aread of interest. NLCD
             variables include imperviousness, greenness, and impervious descriptor (road type) and are based
             on a 30 m x 30 m grid. NLCD variables can be added for point data (lat/lon), polygon data (as an 
@@ -28,4 +28,5 @@ Imports:
     tibble (>= 3.0.3),
     tidyselect (>= 1.1.0),
     utils,
-    stats
+    stats,
+    exactextractr (>= 0.5.1)
