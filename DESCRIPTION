@@ -1,6 +1,6 @@
 Package: addNlcdData
 Title: Add National Landcover Database Variables to Your Data
-Version: 0.0.2
+Version: 0.0.3
 Authors@R: 
     person(given = "Erika",
            family = "Rasnick",
@@ -29,4 +29,7 @@ Imports:
     tidyselect (>= 1.1.0),
     utils,
     stats,
-    exactextractr (>= 0.5.1)
+    exactextractr (>= 0.5.1),
+    s3 (>= 0.2.5)
+Remotes:
+    geomarker-io/s3

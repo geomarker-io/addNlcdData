@@ -54,9 +54,11 @@ read_nlcd_fst_join <- function(d,
   nlcd_cell_number <- unique(d$nlcd_cell)
   nlcd_chunk <- nlcd_cell_number %/% 1e+07
   nlcd_row <- nlcd_cell_number %% 1e+07 + 1
-  nlcd_file <- glue::glue("./nlcd_fst/nlcd_chunk_{nlcd_chunk}.fst")
   nlcd_columns <- unlist(purrr::map(year, ~ glue::glue("{product}_{.}")))
-  if (!file.exists(nlcd_file)) download_nlcd_chunk(nlcd_chunk)
+
+  s3_uri <- glue::glue("s3://geomarker/nlcd/nlcd_fst/nlcd_chunk_{nlcd_chunk}.fst")
+  nlcd_file <- s3::s3_get(s3_uri, public = T)
+
   out <- fst::read_fst(
     path = nlcd_file,
     from = nlcd_row,
@@ -126,23 +128,6 @@ get_nlcd_data <- function(raw_data,
   return(out)
 }
 
-download_nlcd_chunk <- function(nlcd_chunk_number) {
-  dir.create("./nlcd_fst/", showWarnings = FALSE)
-  nlcd_file <- glue::glue("./nlcd_fst/nlcd_chunk_{nlcd_chunk_number}.fst")
-  if (file.exists(nlcd_file)) {
-    message(glue::glue("{nlcd_file} already exists"))
-    invisible(return(NULL))
-  }
-  message(glue::glue("downloading s3://geomarker/nlcd/nlcd_chunk_{nlcd_chunk_number}.fst to {nlcd_file}"))
-  utils::download.file(
-    url = glue::glue(
-      "https://geomarker.s3.us-east-2.amazonaws.com/",
-      "nlcd/nlcd_fst/", "nlcd_chunk_{nlcd_chunk_number}.fst"
-    ),
-    destfile = nlcd_file
-  )
-}
-
 #' download all chunks needed for nlcd multiple cell numbers ahead of time
 #'
 #' @param nlcd_cell_numbers vector of nlcd cell numbers
@@ -158,6 +143,7 @@ download_nlcd_chunk <- function(nlcd_chunk_number) {
 #' @export
 download_nlcd_chunks <- function(nlcd_cell_numbers) {
   nlcd_chunks_needed <- unique(nlcd_cell_numbers %/% 1e+07)
-  message("downloading ", length(nlcd_chunks_needed), " total chunk files to ./nlcd_fst/")
-  purrr::walk(nlcd_chunks_needed, download_nlcd_chunk)
+  nlcd_chunks <- s3::s3_get_files(glue::glue("s3://geomarker/nlcd/nlcd_fst/nlcd_chunk_{nlcd_chunks_needed}.fst"),
+                   public = TRUE)
+  return(nlcd_chunks)
 }
