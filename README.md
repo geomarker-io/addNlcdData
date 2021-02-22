@@ -89,10 +89,12 @@ point_data <- tibble::tribble(
 )
 
 point_data <- get_nlcd_cell_numbers_points(point_data)
-#> Warning: replacing previous import 'vctrs::data_frame' by
-#> 'tibble::data_frame' when loading 'dplyr'
 
 get_nlcd_data(point_data, product = c("nlcd", "impervious", "imperviousdescriptor"), year = 2016)
+#> downloading s3://geomarker/nlcd/nlcd_chunk_779.fst to ./nlcd_fst/nlcd_chunk_779.fst
+#> downloading s3://geomarker/nlcd/nlcd_chunk_785.fst to ./nlcd_fst/nlcd_chunk_785.fst
+#> downloading s3://geomarker/nlcd/nlcd_chunk_776.fst to ./nlcd_fst/nlcd_chunk_776.fst
+#> downloading s3://geomarker/nlcd/nlcd_chunk_781.fst to ./nlcd_fst/nlcd_chunk_781.fst
 #> # A tibble: 5 x 10
 #>      id   lon   lat nlcd_cell year  impervious landcover_class landcover
 #>   <dbl> <dbl> <dbl>     <dbl> <chr>      <dbl> <chr>           <chr>    
@@ -108,28 +110,24 @@ Polygon Data
 
 ``` r
 library(sf)
-#> Linking to GEOS 3.7.2, GDAL 2.4.2, PROJ 5.2.0
 library(tigris)
-#> To enable 
-#> caching of data, set `options(tigris_use_cache = TRUE)` in your R script or .Rprofile.
-#> 
-#> Attaching package: 'tigris'
-#> The following object is masked from 'package:graphics':
-#> 
-#>     plot
 options(tigris_class = 'sf')
+```
 
+``` r
 polygon_data <- tigris::tracts(state = 'oh', county = 'hamilton') %>% 
   dplyr::slice(1:3) %>% 
   dplyr::select(GEOID)
 
 get_nlcd_data_polygons(polygon_data)
+#> downloading s3://geomarker/nlcd/nlcd_chunk_782.fst to ./nlcd_fst/nlcd_chunk_782.fst
+#> downloading s3://geomarker/nlcd/nlcd_chunk_783.fst to ./nlcd_fst/nlcd_chunk_783.fst
+#> downloading s3://geomarker/nlcd/nlcd_chunk_780.fst to ./nlcd_fst/nlcd_chunk_780.fst
 #> Simple feature collection with 12 features and 17 fields
 #> geometry type:  MULTIPOLYGON
 #> dimension:      XY
 #> bbox:           xmin: -84.44668 ymin: 39.14784 xmax: -84.37301 ymax: 39.1935
-#> epsg (SRID):    4269
-#> proj4string:    +proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs
+#> CRS:            4269
 #> First 10 features:
 #>         GEOID year impervious green primary_urban primary_rural
 #> 1 39061005500 2001         35    69             0             0
@@ -162,6 +160,8 @@ Points with buffers
 
 ``` r
 get_nlcd_data_point_buffer(point_data, buffer_m = 400)
+#> downloading s3://geomarker/nlcd/nlcd_chunk_778.fst to ./nlcd_fst/nlcd_chunk_778.fst
+#> downloading s3://geomarker/nlcd/nlcd_chunk_777.fst to ./nlcd_fst/nlcd_chunk_777.fst
 #> # A tibble: 20 x 20
 #>       id   lon   lat nlcd_cell year  impervious green primary_urban
 #>    <dbl> <dbl> <dbl>     <dbl> <chr>      <dbl> <dbl>         <dbl>
