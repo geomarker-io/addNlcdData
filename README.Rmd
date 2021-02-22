@@ -83,11 +83,13 @@ get_nlcd_data(point_data, product = c("nlcd", "impervious", "imperviousdescripto
 
 Polygon Data
 
-```{r}
+```{r, message = F}
 library(sf)
 library(tigris)
 options(tigris_class = 'sf')
+```
 
+```{r}
 polygon_data <- tigris::tracts(state = 'oh', county = 'hamilton') %>% 
   dplyr::slice(1:3) %>% 
   dplyr::select(GEOID)
