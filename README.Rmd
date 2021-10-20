@@ -37,7 +37,7 @@ remotes::install_github("geomarker-io/addNlcdData")
     - `impervious`: percent impervious
     - `landcover_class`: landcover classfication category (broad)
     - `landcover`: landcover classification (detailed)
-    - `green`: TRUE/FALSE if landcover classification in any category except water, ice/snow, developed medium intensity, developed high intensity, rock/sand/clay
+    - `green`: TRUE/FALSE if landcover classification in any category except water, ice/snow, developed medium intensity, developed high intensity, rock/sand/clay (based on [published](https://doi.org/10.1016/j.ufug.2016.10.013) definitions)
     - `road_type`: impervious descriptor category (or "non-impervious")
     
 - Variables returned for polygon data include:
@@ -93,14 +93,32 @@ options(tigris_class = 'sf')
 polygon_data <- tigris::tracts(state = 'oh', county = 'hamilton') %>% 
   dplyr::slice(1:3) %>% 
   dplyr::select(GEOID)
+```
 
+
+```{r, eval = FALSE}
 get_nlcd_data_polygons(polygon_data)
 ```
 
-Points with buffers
+```{r, include = FALSE, message = FALSE}
+d_poly <- get_nlcd_data_polygons(polygon_data)
+```
 
-```{r}
-get_nlcd_data_point_buffer(point_data, buffer_m = 400)
+```{r, echo = FALSE}
+d_poly 
 ```
 
 
+Points with buffers
+
+```{r, eval = FALSE}
+get_nlcd_data_point_buffer(point_data, buffer_m = 400)
+```
+
+```{r, include = FALSE, message = FALSE}
+d_buffer <- get_nlcd_data_point_buffer(point_data, buffer_m = 400)
+```
+
+```{r, echo = FALSE}
+d_buffer
+```
