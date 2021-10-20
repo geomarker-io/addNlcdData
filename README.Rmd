@@ -37,7 +37,7 @@ remotes::install_github("geomarker-io/addNlcdData")
     - `impervious`: percent impervious
     - `landcover_class`: landcover classfication category (broad)
     - `landcover`: landcover classification (detailed)
-    - `green`: TRUE/FALSE if landcover classification in any category except water, ice/snow, developed medium intensity, developed high intensity, rock/sand/clay
+    - `green`: TRUE/FALSE if landcover classification in any category except water, ice/snow, developed medium intensity, developed high intensity, rock/sand/clay (based on [published](https://doi.org/10.1016/j.ufug.2016.10.013) definitions)
     - `road_type`: impervious descriptor category (or "non-impervious")
     
 - Variables returned for polygon data include:
