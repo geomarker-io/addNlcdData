@@ -4,8 +4,11 @@
 \alias{get_nlcd_data}
 \title{get NLCD data for NLCD cells}
 \usage{
-get_nlcd_data(raw_data, product = c("nlcd", "impervious",
-  "imperviousdescriptor"), year = c(2001, 2006, 2011, 2016))
+get_nlcd_data(
+  raw_data,
+  product = c("nlcd", "impervious", "imperviousdescriptor"),
+  year = c(2001, 2006, 2011, 2016)
+)
 }
 \arguments{
 \item{raw_data}{data.frame with column 'nlcd_cell'}

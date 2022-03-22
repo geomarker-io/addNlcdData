@@ -56,7 +56,7 @@ read_nlcd_fst_join <- function(d,
   nlcd_row <- nlcd_cell_number %% 1e+07 + 1
   nlcd_columns <- unlist(purrr::map(year, ~ glue::glue("{product}_{.}")))
 
-  s3_uri <- glue::glue("s3://geomarker/nlcd/nlcd_fst/nlcd_chunk_{nlcd_chunk}.fst")
+  s3_uri <- unique(glue::glue("s3://geomarker/nlcd/nlcd_fst/nlcd_chunk_{nlcd_chunk}.fst"))
   nlcd_file <- s3::s3_get(s3_uri, public = T)
 
   out <- fst::read_fst(
