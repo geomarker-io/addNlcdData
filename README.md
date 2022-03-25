@@ -9,9 +9,9 @@
 status](https://github.com/geomarker-io/addNlcdData/workflows/R-CMD-check/badge.svg)](https://github.com/geomarker-io/addNlcdData/actions)
 <!-- badges: end -->
 
-The goal of addNlcdData is to add varaibles from the [National Landcover
-Database](https://www.mrlc.gov/) to your data based on nlcd\_cell (an
-identifier for a 30 x 30 m NLCD grid cell) and year (2001, 2006, 2011,
+The goal of addNlcdData is to add variables from the [National Landcover
+Database](https://www.mrlc.gov/) to your data based on coordinates, polygons, or cell 
+identifiers for the 30 x 30 m NLCD grid cell and year (2001, 2006, 2011,
 or 2016).
 
 ## Installation
