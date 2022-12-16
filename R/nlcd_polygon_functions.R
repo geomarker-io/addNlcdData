@@ -1,10 +1,11 @@
 get_nlcd_percentages <- function(query_poly) {
-
   nlcd_cells <- exactextractr::exact_extract(r_nlcd_empty(), query_poly, include_cell = T)[[1]]
 
-  query_poly <- tibble::tibble(.row = seq_len(length(nlcd_cells$cell)),
-                               nlcd_cell = nlcd_cells$cell,
-                               coverage_fraction = nlcd_cells$coverage_fraction)
+  query_poly <- tibble::tibble(
+    .row = seq_len(length(nlcd_cells$cell)),
+    nlcd_cell = nlcd_cells$cell,
+    coverage_fraction = nlcd_cells$coverage_fraction
+  )
 
   nlcd_data <- get_nlcd_data(query_poly)
 
@@ -43,7 +44,7 @@ get_nlcd_percentages <- function(query_poly) {
 #'
 #' @export
 get_nlcd_data_polygons <- function(polygon_data) {
-  if (! 'sf' %in% class(polygon_data)) {
+  if (!"sf" %in% class(polygon_data)) {
     stop("input object must be of class 'sf'")
   }
 
@@ -55,9 +56,9 @@ get_nlcd_data_polygons <- function(polygon_data) {
     stats::na.omit() %>%
     sf::st_transform(crs = raster::crs(r_nlcd_empty())) # reproject points into NLCD projection for overlay
 
-  d_out <- purrr::map(1:nrow(d), ~get_nlcd_percentages(d[.x,]))
+  d_out <- purrr::map(1:nrow(d), ~ get_nlcd_percentages(d[.x, ]))
 
-  d_out <- purrr::map2(d_out, 1:length(d_out), ~dplyr::mutate(.x, .row = .y))
+  d_out <- purrr::map2(d_out, 1:length(d_out), ~ dplyr::mutate(.x, .row = .y))
 
   d_out <-
     dplyr::bind_rows(d_out) %>%
@@ -77,13 +78,13 @@ get_nlcd_data_polygons <- function(polygon_data) {
 #'
 #' @examples
 #' if (FALSE) {
-#' point_data <- data.frame(
-#'   id = c('1a', '2b', '3c'),
-#'   lat = c(39.19674, 39.19674, 39.28765),
-#'   lon = c(-84.582601, -84.582601, -84.510173)
-#' )
+#'   point_data <- data.frame(
+#'     id = c("1a", "2b", "3c"),
+#'     lat = c(39.19674, 39.19674, 39.28765),
+#'     lon = c(-84.582601, -84.582601, -84.510173)
+#'   )
 #'
-#' get_nlcd_data_polygons(point_data, buffer_m = 400)
+#'   get_nlcd_data_polygons(point_data, buffer_m = 400)
 #' }
 #' @export
 get_nlcd_data_point_buffer <- function(point_data, buffer_m) {

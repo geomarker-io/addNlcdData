@@ -89,15 +89,10 @@ library(tigris)
 options(tigris_class = 'sf')
 ```
 
-```{r}
+```{r, message = F}
 polygon_data <- tigris::tracts(state = 'oh', county = 'hamilton') %>% 
   dplyr::slice(1:3) %>% 
   dplyr::select(GEOID)
-```
-
-
-```{r, eval = FALSE}
-get_nlcd_data_polygons(polygon_data)
 ```
 
 ```{r, include = FALSE, message = FALSE}
@@ -105,9 +100,8 @@ d_poly <- get_nlcd_data_polygons(polygon_data)
 ```
 
 ```{r, echo = FALSE}
-d_poly 
+d_poly
 ```
-
 
 Points with buffers
 
