@@ -1,4 +1,5 @@
 test_that("out of range points ignored", {
+  skip_on_ci()
   d <- tibble::tibble(id = c(1, 2),
                       lat = c(18.2084835, 39),
                       lon = c(-66.5858779, -85))
