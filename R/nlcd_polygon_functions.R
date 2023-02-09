@@ -1,38 +1,60 @@
 get_nlcd_percentages <- function(query_poly) {
   nlcd_cells <- exactextractr::exact_extract(r_nlcd_empty(), query_poly, include_cell = T)[[1]]
 
-  query_poly <- tibble::tibble(
-    .row = seq_len(length(nlcd_cells$cell)),
-    nlcd_cell = nlcd_cells$cell,
-    coverage_fraction = nlcd_cells$coverage_fraction
-  )
+  if (nrow(nlcd_cells) < 1) {
+    message('polygon is outside of contiguous U.S. all NLCD values will be missing')
+    return(tibble::tibble(year = c("2001", "2006", "2011", "2016"),
+                          impervious = rep(NA, 4),
+                          green = rep(NA, 4),
+                          primary_urban = rep(NA, 4),
+                          primary_rural = rep(NA, 4),
+                          secondary_urban = rep(NA, 4),
+                          secondary_rural = rep(NA, 4),
+                          tertiary_urban = rep(NA, 4),
+                          tertiary_rural = rep(NA, 4),
+                          thinned_urban = rep(NA, 4),
+                          thinned_rural = rep(NA, 4),
+                          nonroad_urban = rep(NA, 4),
+                          nonroad_rural = rep(NA, 4),
+                          energyprod_urban = rep(NA, 4),
+                          energyprod_rural = rep(NA, 4),
+                          nonimpervious = rep(NA, 4)))
+  } else {
 
-  nlcd_data <- get_nlcd_data(query_poly)
-
-  road_type_percentage <- function(road_type_vector, road_type) {
-    fraction_roads <- sum(road_type_vector == road_type) / length(road_type_vector)
-    round(fraction_roads * 100, 0)
-  }
-
-  nlcd_data %>%
-    dplyr::group_by(year) %>%
-    dplyr::summarize(
-      impervious = round(mean(impervious), 0),
-      green = round(100 * sum(green) / length(green), 0),
-      primary_urban = road_type_percentage(road_type, "primary_urban"),
-      primary_rural = road_type_percentage(road_type, "primary_rural"),
-      secondary_urban = road_type_percentage(road_type, "secondary_urban"),
-      secondary_rural = road_type_percentage(road_type, "secondary_rural"),
-      tertiary_urban = road_type_percentage(road_type, "tertiary_urban"),
-      tertiary_rural = road_type_percentage(road_type, "tertiary_rural"),
-      thinned_urban = road_type_percentage(road_type, "thinned_urban"),
-      thinned_rural = road_type_percentage(road_type, "thinned_rural"),
-      nonroad_urban = road_type_percentage(road_type, "nonroad_urban"),
-      nonroad_rural = road_type_percentage(road_type, "nonroad_rural"),
-      energyprod_urban = road_type_percentage(road_type, "energyprod_urban"),
-      energyprod_rural = road_type_percentage(road_type, "energyprod_rural"),
-      nonimpervious = road_type_percentage(road_type, "non-impervious")
+    query_poly <- tibble::tibble(
+      .row = seq_len(length(nlcd_cells$cell)),
+      nlcd_cell = nlcd_cells$cell,
+      coverage_fraction = nlcd_cells$coverage_fraction
     )
+
+    nlcd_data <- get_nlcd_data(query_poly)
+
+    road_type_percentage <- function(road_type_vector, road_type) {
+      fraction_roads <- sum(road_type_vector == road_type) / length(road_type_vector)
+      round(fraction_roads * 100, 0)
+    }
+
+    nlcd_data %>%
+      dplyr::group_by(year) %>%
+      dplyr::summarize(
+        impervious = round(mean(impervious), 0),
+        green = round(100 * sum(green) / length(green), 0),
+        primary_urban = road_type_percentage(road_type, "primary_urban"),
+        primary_rural = road_type_percentage(road_type, "primary_rural"),
+        secondary_urban = road_type_percentage(road_type, "secondary_urban"),
+        secondary_rural = road_type_percentage(road_type, "secondary_rural"),
+        tertiary_urban = road_type_percentage(road_type, "tertiary_urban"),
+        tertiary_rural = road_type_percentage(road_type, "tertiary_rural"),
+        thinned_urban = road_type_percentage(road_type, "thinned_urban"),
+        thinned_rural = road_type_percentage(road_type, "thinned_rural"),
+        nonroad_urban = road_type_percentage(road_type, "nonroad_urban"),
+        nonroad_rural = road_type_percentage(road_type, "nonroad_rural"),
+        energyprod_urban = road_type_percentage(road_type, "energyprod_urban"),
+        energyprod_rural = road_type_percentage(road_type, "energyprod_rural"),
+        nonimpervious = road_type_percentage(road_type, "non-impervious")
+      )
+
+  }
 }
 
 #' get NLCD data for polygons

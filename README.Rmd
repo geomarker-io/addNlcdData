@@ -17,6 +17,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![R build status](https://github.com/geomarker-io/addNlcdData/workflows/R-CMD-check/badge.svg)](https://github.com/geomarker-io/addNlcdData/actions)
+[![R-CMD-check](https://github.com/geomarker-io/addNlcdData/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/geomarker-io/addNlcdData/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The goal of addNlcdData is to add varaibles from the [National Landcover Database](https://www.mrlc.gov/) to your data based on nlcd_cell (an identifier for a 30 x 30 m NLCD grid cell) and year (2001, 2006, 2011, or 2016).
